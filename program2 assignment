@@ -1,114 +1,159 @@
-import requests
+2) PROBLEM 2-INVENTORY MANAGEMENT SYSTEM OPTIMIZATION
+SCENARIO-
+I have been asked by a retail company to optimize their inventory management system. The company wants to minimize stockouts and overstock situations while maximizing inventory turnover and profitability.
+Tasks:
+Model the inventory system: Define the structure of the inventory system, including products, warehouses, and current stock levels.
+Implement an inventory tracking application: Develop a Python application that tracks inventory levels in real-time and alerts when stock levels fall below a certain threshold.
+Optimize inventory ordering: Implement algorithms to calculate optimal reorder points and quantities based on historical sales data, lead times, and demand forecasts.
+Generate reports: Provide reports on inventory turnover rates, stockout occurrences, and cost implications of overstock situations.
+User interaction: Allow users to input product IDs or names to view current stock levels, reorder recommendations, and historical data.
+Deliverables:
+Data Flow Diagram: Illustrate how data flows within the inventory management system, from input (e.g., sales data, inventory adjustments) to output (e.g., reorder alerts, reports).
+Pseudocode and Implementation: Provide pseudocode and actual code demonstrating
+how inventory levels are tracked, reorder points are calculated, and reports are
+generated.
+Documentation: Explain the algorithms used for reorder optimization, how historical data influences decisions, and any assumptions made (e.g., constant lead times).
+User Interface: Develop a user-friendly interface for accessing inventory information, viewing reports, and receiving alerts.
+Assumptions and Improvements: Discuss assumptions about demand patterns, supplier reliability, and potential improvements for the inventory management system's
 
-# Define the API key and base URL
-API_KEY = 'your_api_key_here'  # Replace with your actual OpenWeatherMap API key
-BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
+DATA FLOW DIAGRAM:-
 
-def get_weather_data(location):
-    # Construct the API request URL
-    request_url = f"{BASE_URL}?q={location}&appid={API_KEY}&units=metric"
+User Input (Product ID/Name, Sales Data, Inventory Adjustments) -> Inventory Tracking Application -> Reorder Calculation Algorithm
+                 ^                                                                              |
+                 |                                                                              v
+           Alert on Low Stock
+                                                        Generate Reports (Inventory Turnover, Stockouts, Cost Implications)
 
-    # Send a GET request to the API
-    response = requests.get(request_url)
+INVENTORY TRACKING APPLICATION:-
+class Product:
+    def _init_(self, product_id, name, initial_stock, reorder_point, reorder_quantity):
+        self.product_id = product_id
+        self.name = name
+        self.stock = initial_stock
+        self.reorder_point = reorder_point
+        self.reorder_quantity = reorder_quantity
 
-    # Check if the response is valid
-    if response.status_code == 200:
-        data = response.json()
-        return data
-    else:
-        print("Error fetching data. Please check the location and try again.")
-        return None
-
-def display_weather_data(data):
-    if data:
-        # Extract and display relevant weather information
-        temperature = data['main']['temp']
-        weather_condition = data['weather'][0]['description']
-        humidity = data['main']['humidity']
-        wind_speed = data['wind']['speed']
-
-        print(f"Weather in {data['name']}:")
-        print(f"Temperature: {temperature}°C")
-        print(f"Condition: {weather_condition.capitalize()}")
-        print(f"Humidity: {humidity}%")
-        print(f"Wind Speed: {wind_speed} m/s")
-    else:
-        print("No data to display.")
-
-def main():
-    # Prompt the user to enter a location
-    location = input("Enter the city name: ")
-
-    # Fetch weather data for the specified location
-    weather_data = get_weather_data(location)
-
-    # Display the fetched weather data
-    display_weather_data(weather_data)
-
-if _name_ == "_main_":
-    main()
-10:21 AM
-import pandas as pd
+    def update_stock(self, adjustment):
+        self.stock += adjustment
 
 class InventoryManagementSystem:
-    def _init_(self, product_data, sales_data):
-        self.inventory = product_data.set_index('product_id')['stock_level'].to_dict()
-        self.sales_data = sales_data
+    def _init_(self):
+        self.products = {}
 
-    def calculate_reorder_point(self, product_id, lead_time, demand_forecast):
-        avg_daily_sales = self.sales_data[self.sales_data['product_id'] == product_id]['quantity_sold'].mean()
-        reorder_point = avg_daily_sales * lead_time + demand_forecast
-        return reorder_point
+    def add_product(self, product_id, name, initial_stock, reorder_point, reorder_quantity):
+        if product_id not in self.products:
+            self.products[product_id] = Product(product_id, name, initial_stock, reorder_point, reorder_quantity)
+        else:
+            print(f"Product with ID {product_id} already exists.")
 
-    def check_stock_levels(self, reorder_point):
-        reorder_alerts = {}
-        for product_id, stock_level in self.inventory.items():
-            if stock_level < reorder_point[product_id]:
-                reorder_alerts[product_id] = reorder_point[product_id] - stock_level
-        return reorder_alerts
+    def track_inventory(self, product_id, adjustment):
+        if product_id in self.products:
+            self.products[product_id].update_stock(adjustment)
+            if self.products[product_id].stock < self.products[product_id].reorder_point:
+                self.generate_reorder_alert(product_id)
+        else:
+            print(f"Product with ID {product_id} does not exist.")
 
-    def update_stock_levels(self, product_id, quantity_sold):
-        self.inventory[product_id] -= quantity_sold
+    def generate_reorder_alert(self, product_id):
+        print(f"Alert: Product {self.products[product_id].name} is below reorder point. Current stock: {self.products[product_id].stock}")
 
-    def generate_reports(self):
-        inventory_turnover = {}
-        for product_id, stock_level in self.inventory.items():
-            total_sales = self.sales_data[self.sales_data['product_id'] == product_id]['quantity_sold'].sum()
-            if stock_level > 0:
-                turnover_rate = total_sales / stock_level
+    def get_product_stock(self, product_id):
+        if product_id in self.products:
+            ret…Read more
+10:55 AM
+Forwarded
+4)Problem 4: Real-Time COVID-19 Statistics Tracker
+Scenario:
+I am developing a real-time COVID-19 statistics tracking application for a healthcare organization. The application should provide up-to-date information on COVID-19 cases, recoveries, and deaths for a specified region.
+Tasks:
+Model the data flow for fetching COVID-19 statistics from an external API and displaying it to the user.
+Implement a Python application that integrates with a COVID-19 statistics API (e.g., disease.sh) to fetch real-time data.
+Display the current number of cases, recoveries, and deaths for a specified region.
+Allow users to input a region (country, state, or city) and display the corresponding COVID-19 statistics.
+Deliverables:
+Data flow diagram illustrating the interaction between the application and the API.
+Pseudocode and implementation of the COVID-19 statistics tracking application.
+Documentation of the API integration and the methods used to fetch and display COVID- 19 data.
+Explanation of any assumptions made and potential improvements.
+
+DATA FLOW DIAGRAM:-
+
+User Input (Region) -> Python Application -> COVID-19 Statistics API (e.g., disease.sh)
+                ^                                            |
+                |                                            v
+        Display COVID-19 Statistics <- JSON Response <- API Request
+
+COVIS-19 STATISTICS TRACKING APPLICATION:-
+
+import requests
+
+class Covid19StatisticsTracker:
+    def init(self):
+        self.base_url = 'https://disease.sh/v3/covid-19'
+
+    def fetch_covid_stats(self, region):
+        endpoint = f'/countries/{region}' if region else '/all'
+        url = self.base_url + endpoint
+
+        try:
+            response = requests.get(url)
+            data = response.json()
+
+            if response.status_code == 200:
+                return data  # Return JSON data received from API
             else:
-                turnover_rate = float('inf')
-            inventory_turnover[product_id] = turnover_rate
-        return inventory_turnover
+                print(f"Error fetching data: {data['message']}")
+                return None
 
-    def get_stock_level(self, product_id):
-        return self.inventory.get(product_id, "Product not found")
+        except requests.exceptions.RequestException as e:
+            print(f"Error fetching data: {e}")
+            return None
 
-product_data = pd.DataFrame({
-    'product_id': ['P001', 'P002', 'P003'],
-    'stock_level': [100, 200, 150]
-})
+    def display_covid_stats(self, data):
+        if data:
+            # Extract relevant COVID-19 statistics
+            cases = data.get('cases', 'N/A')
+            deaths = data.get('deaths', 'N/A')
+            recovered = data.get('recovered', 'N/A')
+            active = data.get('active', 'N/A')
 
-sales_data = pd.DataFrame({
-    'product_id': ['P001', 'P001', 'P002', 'P002', 'P003'],
-    'quantity_sold': [5, 10, 15, 20, 25],
-    'date_sold': pd.to_datetime(['2024-08-01', '2024-08-02', '2024-08-01', '2024-08-02', '2024-08-01'])
-})
+            # Displaying COVID-19 statistics
+            print(f"COVID-19 Statistics:")
+            print(f"Total Cases: {cases}")
+            print(f"Total Deaths: {deaths}")
+            print(f"Total Recovered: {recovered}")
+            print(f"Active Cases: {active}")
+        else:
+            print("No COVID-19 data available for the specified region.")
 
-inventory_system = InventoryManagementSystem(product_data, sales_data)
+# Example usage:
+if name == "main":
+    tracker = Covid19StatisticsTracker()
+    region = input("Enter country name (leave blank for global stats): ")
+    covid_data = tracker.fetch_covid_stats(region)
+    tracker.display_covid_stats(covid_data)
 
-lead_time = 3
-demand_forecast = 10
+Documentation
+API Integration and Methods
+API Integration:
 
-reorder_points = {product_id: inventory_system.calculate_reorder_point(product_id, lead_time, demand_forecast)
-                  for product_id in product_data['product_id']}
+The application integrates with the disease.sh COVID-19 API to fetch real-time statistics.
+Constructs the API request dynamically based on user input (country name) to fetch statistics for a specific region or global statistics.
+Fetch COVID-19 Statistics (fetch_covid_stats method):
 
-reorder_alerts = inventory_system.check_stock_levels(reorder_points)
-print("Reorder Alerts:", reorder_alerts)
+Sends an HTTP GET request to the appropriate endpoint (/all for global stats or /countries/{country} for country-specific stats).
+Handles JSON response to extract COVID-19 statistics including total cases, deaths, recoveries, and active cases.
+Display COVID-19 Statistics (display_covid_stats method):
 
-turnover_report = inventory_system.generate_reports()
-print("Inventory Turnover Report:", turnover_report)
-
-product_id = 'P001'
-stock_level = inventory_system.get_stock_level(product_id)
-print(f"Current stock level of {product_id}: {stock_level}")
+Parses JSON response to extract and display relevant COVID-19 statistics.
+Handles cases where no data is available for the specified region.
+Assumptions
+Data Availability: Assumes real-time availability and updates from the disease.sh API.
+Region Input: Users input country names primarily; can be extended to handle state or city names based on API capabilities.
+API Reliability: Assumes the disease.sh API is reliable and returns accurate data.
+Potential Improvements
+Historical Data: Incorporate historical COVID-19 data for trend analysis and visualization.
+Visualization: Develop graphical charts and maps to visualize COVID-19 statistics for easier interpretation.
+Notifications: Implement notifications or alerts for significant changes in COVID-19 statistics.
+Localized Data: Enhance support for retrieving and displaying regional data (e.g., state-level data within a country).
+By implementing these improvements, the COVID-19 statistics tracking application can provide more comprehensive insights and support for decision-making within healthcare organizations and public health agencies.
