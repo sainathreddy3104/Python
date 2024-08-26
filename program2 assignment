@@ -1,0 +1,114 @@
+import requests
+
+# Define the API key and base URL
+API_KEY = 'your_api_key_here'  # Replace with your actual OpenWeatherMap API key
+BASE_URL = "http://api.openweathermap.org/data/2.5/weather"
+
+def get_weather_data(location):
+    # Construct the API request URL
+    request_url = f"{BASE_URL}?q={location}&appid={API_KEY}&units=metric"
+
+    # Send a GET request to the API
+    response = requests.get(request_url)
+
+    # Check if the response is valid
+    if response.status_code == 200:
+        data = response.json()
+        return data
+    else:
+        print("Error fetching data. Please check the location and try again.")
+        return None
+
+def display_weather_data(data):
+    if data:
+        # Extract and display relevant weather information
+        temperature = data['main']['temp']
+        weather_condition = data['weather'][0]['description']
+        humidity = data['main']['humidity']
+        wind_speed = data['wind']['speed']
+
+        print(f"Weather in {data['name']}:")
+        print(f"Temperature: {temperature}°C")
+        print(f"Condition: {weather_condition.capitalize()}")
+        print(f"Humidity: {humidity}%")
+        print(f"Wind Speed: {wind_speed} m/s")
+    else:
+        print("No data to display.")
+
+def main():
+    # Prompt the user to enter a location
+    location = input("Enter the city name: ")
+
+    # Fetch weather data for the specified location
+    weather_data = get_weather_data(location)
+
+    # Display the fetched weather data
+    display_weather_data(weather_data)
+
+if _name_ == "_main_":
+    main()
+10:21 AM
+import pandas as pd
+
+class InventoryManagementSystem:
+    def _init_(self, product_data, sales_data):
+        self.inventory = product_data.set_index('product_id')['stock_level'].to_dict()
+        self.sales_data = sales_data
+
+    def calculate_reorder_point(self, product_id, lead_time, demand_forecast):
+        avg_daily_sales = self.sales_data[self.sales_data['product_id'] == product_id]['quantity_sold'].mean()
+        reorder_point = avg_daily_sales * lead_time + demand_forecast
+        return reorder_point
+
+    def check_stock_levels(self, reorder_point):
+        reorder_alerts = {}
+        for product_id, stock_level in self.inventory.items():
+            if stock_level < reorder_point[product_id]:
+                reorder_alerts[product_id] = reorder_point[product_id] - stock_level
+        return reorder_alerts
+
+    def update_stock_levels(self, product_id, quantity_sold):
+        self.inventory[product_id] -= quantity_sold
+
+    def generate_reports(self):
+        inventory_turnover = {}
+        for product_id, stock_level in self.inventory.items():
+            total_sales = self.sales_data[self.sales_data['product_id'] == product_id]['quantity_sold'].sum()
+            if stock_level > 0:
+                turnover_rate = total_sales / stock_level
+            else:
+                turnover_rate = float('inf')
+            inventory_turnover[product_id] = turnover_rate
+        return inventory_turnover
+
+    def get_stock_level(self, product_id):
+        return self.inventory.get(product_id, "Product not found")
+
+product_data = pd.DataFrame({
+    'product_id': ['P001', 'P002', 'P003'],
+    'stock_level': [100, 200, 150]
+})
+
+sales_data = pd.DataFrame({
+    'product_id': ['P001', 'P001', 'P002', 'P002', 'P003'],
+    'quantity_sold': [5, 10, 15, 20, 25],
+    'date_sold': pd.to_datetime(['2024-08-01', '2024-08-02', '2024-08-01', '2024-08-02', '2024-08-01'])
+})
+
+inventory_system = InventoryManagementSystem(product_data, sales_data)
+
+lead_time = 3
+demand_forecast = 10
+
+reorder_points = {product_id: inventory_system.calculate_reorder_point(product_id, lead_time, demand_forecast)
+                  for product_id in product_data['product_id']}
+
+reorder_alerts = inventory_system.check_stock_levels(reorder_points)
+print("Reorder Alerts:", reorder_alerts)
+
+turnover_report = inventory_system.generate_reports()
+print("Inventory Turnover Report:", turnover_report)
+
+product_id = 'P001'
+stock_level = inventory_system.get_stock_level(product_id)
+print(f"Current stock level of {product_id}: {stock_level}")
